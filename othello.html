@@ -1,0 +1,108 @@
+09 - 渴望做梦(kwzm)
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="09 - 渴望做梦(kwzm)">
+  <title>黑白棋</title>
+</head>
+
+<body>
+  <div id="container">
+  </div>
+</body>
+<script>
+  const board = [
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 1, 2, 0, 0, 0],
+    [0, 0, 0, 2, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+  ];
+  const container = document.getElementById("container")
+  const BLANK = 0
+  const WHITE = 1
+  const BLACK = 2
+  const GRID_STYLE = 'display:inline-block;border:1px solid white;width:50px;height:50px;background-color:darkgreen;'
+  const DICK_STYLE = 'border-radius:20px;width:40px;height:40px;margin-top:5px;margin-left:5px;'
+  const WHITE_STYLE = DICK_STYLE + 'background-color:white;'
+  const BLACK_STYLE = DICK_STYLE + 'background-color:black;'
+  let color = BLACK
+
+  function render() {
+    container.innerHTML = '';
+
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) {
+        const grid = document.createElement("div");
+
+        grid.style = GRID_STYLE;
+
+        grid.addEventListener('click', (e) => handleGridClick(e, x, y));
+
+        container.appendChild(grid);
+
+        if (board[y][x] === WHITE) {
+          const disc = document.createElement("div");
+
+          disc.style = WHITE_STYLE;
+          grid.appendChild(disc);
+        }
+
+        if (board[y][x] === BLACK) {
+          const disc = document.createElement("div");
+
+          disc.style = BLACK_STYLE;
+          grid.appendChild(disc);
+        }
+      }
+      container.appendChild(document.createElement("br"));
+    }
+  }
+
+  function handleGridClick(e, x, y) {
+    const targetColor = board[y][x];
+    const ox = x;
+    const oy = y;
+    let siblingColor;
+    let isOpposite = false;
+    let canMove = false;
+
+    if (targetColor !== BLANK) return
+
+    while (--x >= 0) {
+      siblingColor = board[oy][x];
+
+      if (siblingColor === BLANK) return;
+
+      if (siblingColor === 3 - color) {
+        isOpposite = true;
+      }
+
+      if (siblingColor === color) {
+        if (isOpposite) {
+          canMove = true;
+          break;
+        }
+      }
+    }
+
+    if (canMove) {
+      while (x++ != ox) {
+        board[oy][x] = color;
+      }
+
+      color = 3 - color;
+
+      render();
+    }
+  }
+
+  render()
+</script>
+
+</html>
